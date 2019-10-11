@@ -196,8 +196,6 @@ void Swarm_Run(Swarm * swarm, Prng * prng) {
       Particle_FindBest(&swarm->particles[i], swarm->fitness_func);
     }
 
-    /* Plot the particles */
-    fprintf(fp, "%lu %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", swarm->iterations, swarm->particles[0].position[0], swarm->particles[0].position[1], swarm->particles[0].current_fitness, swarm->particles[1].position[0], swarm->particles[1].position[1], swarm->particles[1].current_fitness, swarm->particles[2].position[0], swarm->particles[2].position[1], swarm->particles[2].current_fitness);
     
     
     /* update the swarm's best known position */
@@ -208,6 +206,10 @@ void Swarm_Run(Swarm * swarm, Prng * prng) {
 	best_fitness = swarm->particles[i].best_fitness;
       }
     }
+
+    /* Plot the particles */
+    fprintf(fp, "%lu %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", swarm->iterations, swarm->particles[0].position[0], swarm->particles[0].position[1], swarm->particles[0].current_fitness, swarm->particles[1].position[0], swarm->particles[1].position[1], swarm->particles[1].current_fitness, swarm->particles[2].position[0], swarm->particles[2].position[1], swarm->particles[2].current_fitness, swarm->global_best[0], swarm->global_best[1], best_fitness);
+    
     
     swarm->iterations--;
   }

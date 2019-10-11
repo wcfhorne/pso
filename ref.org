@@ -1,5 +1,8 @@
 http://www.swarmintelligence.org/tutorials.php
 
+# plotting
+https://stackoverflow.com/questions/34142292/gnuplot-3d-time-animation-from-data-file
+
 # areas to research
 coevolution, enviromentally modifiction, and helping
 might also look at using lambda calc
