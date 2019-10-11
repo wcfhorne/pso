@@ -1,0 +1,6 @@
+http://www.swarmintelligence.org/tutorials.php
+
+# areas to research
+coevolution, enviromentally modifiction, and helping
+might also look at using lambda calc
+
