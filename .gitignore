@@ -54,6 +54,7 @@ dkms.conf
 #byproducts
 *.gif
 *.dat
+pso
 
 # emacs
 *~
