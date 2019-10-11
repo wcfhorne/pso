@@ -82,7 +82,6 @@ void Particle_UpdatePosition(Particle *particle) {
 /* Rename */
 void Particle_FindBest(Particle *particle, double (*fitness_func)(double input[DIM])) {
 
-  //double fitness = Fitness(particle->position);
   double fitness = (*fitness_func)(particle->position);
   particle->current_fitness = fitness;
   
@@ -194,9 +193,7 @@ void Swarm_Run(Swarm * swarm, Prng * prng) {
     /* update each particle's best known position */
     for (int i = 0; i < NP; i++) {
       Particle_FindBest(&swarm->particles[i], swarm->fitness_func);
-    }
-
-    
+    } 
     
     /* update the swarm's best known position */
     double best_fitness = swarm->fitness_func(swarm->global_best);

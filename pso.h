@@ -2,7 +2,6 @@
 #ifndef PSO_H
 #define PSO_H
 
-#include <stdbool.h>
 #include "prng.h"
 
 #define NP 3
