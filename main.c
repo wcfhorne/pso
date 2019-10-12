@@ -31,6 +31,7 @@ double Rastrigin_Fitness(double input[DIM]) {
   return (10.0 * 2.0) + sum;
 }
 
+/* Map a 3 dimensional function with a passed function  */
 void Map_Function_3D(char * filename, double (*fitness_func)(double input[2]), double start, double end, double step){
 
   FILE *fp;
@@ -53,27 +54,47 @@ void Map_Function_3D(char * filename, double (*fitness_func)(double input[2]), d
   fclose(fp);
 }
 
+/* Map a 2 dimensional function with a passed function. TODO: Test*/
+void Map_Function_2D(char * filename, double (*fitness_func)(double input[1]), double start, double end, double step){
+
+  FILE *fp;
+  fp = fopen(filename, "w");
+  if (fp == NULL) {
+    fprintf(stderr, "Can't open file, %s %d\n", __FILE__, __LINE__);
+    exit(-1);
+  }
+
+  for (double i = start; i < end; i = i + step) {
+    double input[DIM] = {i};
+    double output = (*fitness_func)(input);
+      
+    double vars[DIM + 1] = {input[0], output};
+    fprintf(fp, "%lf %lf\n", vars[0], vars[1]);
+  }
+  fclose(fp);
+}
+
 void Sphere() {
   Map_Function_3D("sphere.dat", Sphere_Fitness, -5.0, 5.0, 0.1);
 
   Prng prng = Prng_Default();
   Swarm swarm;
-  Swarm_Init(&swarm, &Sphere_Fitness, -5.0, 5.0, 1000, &prng);
+  Swarm_Init(&swarm, &Sphere_Fitness, -5.0, 5.0, &prng);
 
   Swarm_Print(&swarm);
-  Swarm_Run(&swarm, &prng);
+  Swarm_Run(&swarm, &prng, 1000);
   Swarm_Print(&swarm);
 }
 
 void Rastrigin() {
-  Map_Function_3D("rastigan.dat", Rastrigin_Fitness, -5.0, 5.0, 0.1);
+  Map_Function_3D("rastigan.dat", Rastrigin_Fitness, -5.2, 5.2, 0.1);
 
   Prng prng = Prng_Default();
   Swarm swarm;
-  Swarm_Init(&swarm, &Rastrigin_Fitness, -5.0, 5.0, 1000, &prng);
+  Swarm_Init(&swarm, &Rastrigin_Fitness, -5.2, 5.2, &prng);
 
   Swarm_Print(&swarm);
-  Swarm_Run(&swarm, &prng);
+  Swarm_Run(&swarm, &prng, 1000);
   Swarm_Print(&swarm);
 }
 

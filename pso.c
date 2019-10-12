@@ -136,12 +136,11 @@ void Swarm_Print(Swarm *swarm) {
 }
 
 /*  */
-void Swarm_Init(Swarm * swarm, double (*fitness_func)(double input[DIM]), double lower_bounds, double upper_bounds, uint64_t iterations, Prng * prng) {
+void Swarm_Init(Swarm * swarm, double (*fitness_func)(double input[DIM]), double lower_bounds, double upper_bounds, Prng * prng) {
 
   swarm->fitness_func = fitness_func;
   memcpy(&swarm->lower_bounds, &lower_bounds, sizeof(swarm->lower_bounds));
   memcpy(&swarm->upper_bounds, &upper_bounds, sizeof(swarm->upper_bounds));
-  swarm-> iterations = iterations;
 
   swarm->c1 = 1.0;
   swarm->c2 = 1.0;
@@ -161,19 +160,20 @@ void Swarm_Init(Swarm * swarm, double (*fitness_func)(double input[DIM]), double
 }
 
 /*  */
-void Swarm_Run(Swarm * swarm, Prng * prng) {
-  
-  FILE *fp;
+void Swarm_Run(Swarm * swarm, Prng * prng, uint64_t iterations) {
 
+  #ifdef PLOT
+  FILE *fp;
   fp = fopen("swarm.dat", "w");
   if(fp == NULL){
     fprintf(stderr, "Can't open file, %s %d\n", __FILE__, __LINE__);
     exit(-1);
   }
+  #endif
 
   
   /* run until stopping condition */
-  while (swarm->iterations > 0) {
+  while (iterations > 0) {
 
     /* update each particle's velocity */
     for (int i = 0; i < NP; i++) {
@@ -204,12 +204,16 @@ void Swarm_Run(Swarm * swarm, Prng * prng) {
       }
     }
 
+    #ifdef PLOT
     /* Plot the particles */
-    fprintf(fp, "%lu %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", swarm->iterations, swarm->particles[0].position[0], swarm->particles[0].position[1], swarm->particles[0].current_fitness, swarm->particles[1].position[0], swarm->particles[1].position[1], swarm->particles[1].current_fitness, swarm->particles[2].position[0], swarm->particles[2].position[1], swarm->particles[2].current_fitness, swarm->global_best[0], swarm->global_best[1], best_fitness);
+    fprintf(fp, "%lu %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", iterations, swarm->particles[0].position[0], swarm->particles[0].position[1], swarm->particles[0].current_fitness, swarm->particles[1].position[0], swarm->particles[1].position[1], swarm->particles[1].current_fitness, swarm->particles[2].position[0], swarm->particles[2].position[1], swarm->particles[2].current_fitness, swarm->global_best[0], swarm->global_best[1], best_fitness);
+    #endif
     
     
-    swarm->iterations--;
+    iterations--;
   }
 
+  #ifdef PLOT
   fclose(fp);
+  #endif
 }
