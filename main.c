@@ -82,7 +82,7 @@ void Sphere() {
   Swarm_Init(&swarm, &Sphere_Fitness, -5.0, 5.0, &prng);
 
   Swarm_Print(&swarm);
-  Swarm_Run(&swarm, &prng, 1000);
+  Swarm_Run_Map(&swarm, &prng, 1000, "sphere-opt.dat");
   Swarm_Print(&swarm);
 }
 
@@ -94,13 +94,14 @@ void Rastrigin() {
   Swarm_Init(&swarm, &Rastrigin_Fitness, -5.2, 5.2, &prng);
 
   Swarm_Print(&swarm);
-  Swarm_Run(&swarm, &prng, 1000);
+  Swarm_Run_Map(&swarm, &prng, 1000, "rastigan-opt.dat");
   Swarm_Print(&swarm);
 }
 
 int main() {
 
-  Sphere(); 
+  Sphere();
+  Rastrigin();
 
   return 0;
 }

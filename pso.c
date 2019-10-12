@@ -161,16 +161,6 @@ void Swarm_Init(Swarm * swarm, double (*fitness_func)(double input[DIM]), double
 
 /*  */
 void Swarm_Run(Swarm * swarm, Prng * prng, uint64_t iterations) {
-
-  #ifdef PLOT
-  FILE *fp;
-  fp = fopen("swarm.dat", "w");
-  if(fp == NULL){
-    fprintf(stderr, "Can't open file, %s %d\n", __FILE__, __LINE__);
-    exit(-1);
-  }
-  #endif
-
   
   /* run until stopping condition */
   while (iterations > 0) {
@@ -203,17 +193,58 @@ void Swarm_Run(Swarm * swarm, Prng * prng, uint64_t iterations) {
 	best_fitness = swarm->particles[i].best_fitness;
       }
     }
+ 
+    iterations--;
+  }
+}
 
-    #ifdef PLOT
-    /* Plot the particles */
-    fprintf(fp, "%lu %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", iterations, swarm->particles[0].position[0], swarm->particles[0].position[1], swarm->particles[0].current_fitness, swarm->particles[1].position[0], swarm->particles[1].position[1], swarm->particles[1].current_fitness, swarm->particles[2].position[0], swarm->particles[2].position[1], swarm->particles[2].current_fitness, swarm->global_best[0], swarm->global_best[1], best_fitness);
-    #endif
+/*  */
+void Swarm_Run_Map(Swarm * swarm, Prng * prng, uint64_t iterations, char * file) {
+
+  FILE *fp;
+  fp = fopen(file, "w");
+  if(fp == NULL){
+    fprintf(stderr, "Can't open file, %s %d\n", __FILE__, __LINE__);
+    exit(-1);
+  }
+
+  /* run until stopping condition */
+  while (iterations > 0) {
+
+    /* update each particle's velocity */
+    for (int i = 0; i < NP; i++) {
+      Particle_UpdateVelocity(&swarm->particles[i], prng, swarm->c1, swarm->c2, swarm->global_best); /* need to check for bounds and restart*/
+    }
+
+    /* update each particle's position */
+    for (int i = 0; i < NP; i++) {
+      Particle_UpdatePosition(&swarm->particles[i]);
+      bool inbounds = Particle_CheckPositionBounds(&swarm->particles[i], swarm->lower_bounds, swarm->upper_bounds);
+
+      if (inbounds != true) {
+	Particle_Restart(&swarm->particles[i], prng, swarm->lower_bounds, swarm->upper_bounds);
+      }
+    }
+
+    /* update each particle's best known position */
+    for (int i = 0; i < NP; i++) {
+      Particle_FindBest(&swarm->particles[i], swarm->fitness_func);
+    } 
     
+    /* update the swarm's best known position */
+    double best_fitness = swarm->fitness_func(swarm->global_best);
+    for (int i = 0; i < NP; i++) {
+      if( swarm->particles[i].best_fitness < best_fitness){
+	memcpy(&swarm->global_best, &swarm->particles[i].best, sizeof(swarm->global_best));
+	best_fitness = swarm->particles[i].best_fitness;
+      }
+    }
+
+    /* Plot the particles */
+    fprintf(fp, "%lu %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf %lf\n", iterations, swarm->particles[0].position[0], swarm->particles[0].position[1], swarm->particles[0].current_fitness, swarm->particles[1].position[0], swarm->particles[1].position[1], swarm->particles[1].current_fitness, swarm->particles[2].position[0], swarm->particles[2].position[1], swarm->particles[2].current_fitness, swarm->global_best[0], swarm->global_best[1], best_fitness);   
     
     iterations--;
   }
 
-  #ifdef PLOT
   fclose(fp);
-  #endif
 }
