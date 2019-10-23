@@ -9,6 +9,7 @@
 #include <stdlib.h>
 #include <string.h>
 
+/* Sphere Function */
 double Sphere_Fitness(double input[DIM]) {
 
   double sum = 0;

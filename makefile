@@ -1,10 +1,17 @@
+# Makefile
 
 CC = gcc
-FLG = -Wall -Wextra
+FLG = -Wall -Wextra -g
 LIB = -lm
 OBJ = prng.o pso.o main.o
+BIN = pso
 
-all: $(OBJ)
+all: ${BIN}
+
+opt: FLG = -O3
+opt: all
+
+pso: $(OBJ)
 	$(CC) $(FLG) $(OBJ) $(LIB) -o pso
 
 main.o: main.c
