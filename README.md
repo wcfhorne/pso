@@ -4,7 +4,7 @@ Here is an example of using a PSO for finding the minimum of a function, in this
 
 ## Sphere
 
-![](example/rastigan-map.gif?raw=true)
+![](example/sphere-map.gif?raw=true)
 
 ## Rastrigin
 
